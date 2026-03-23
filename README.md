@@ -31,8 +31,9 @@ The standards are based on long-term practical experience and a **Data-Oriented 
 
 For Japanese README: [README_JA.md](README_JA.md)
 
-## Quick Start
+## Quick Start / Templates
 * [CREATE TABLE Snippet](Snippet-CreateTable.sql)
+* [postgresql.conf.basic](postgresql.conf.basic): Baseline configuration template
 
 ## Nature of This Standard
 

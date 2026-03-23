@@ -18,8 +18,9 @@ PostgreSQL向けDB設計・設定標準です
 - [DatabaseDesignStandard.md](DatabaseDesignStandard.md): 日本語版の設計標準
 - [DatabaseDesignStandard_EN.md](DatabaseDesignStandard_EN.md): 英語版の設計標準
 
-## 利用例（スニペット）
+## 利用例（スニペット・テンプレート）
 - [CREATE TABLEテンプレート](Snippet-CreateTable.sql)
+- [postgresql.conf.basic](postgresql.conf.basic): 基本設定テンプレート
 
 ## 備考
 * 2008年頃に個人で作成していたPostgreSQL v8.0向けの設計規約をベースに生成AIを活用して最新のPostgreSQL v17.0に対応させたものです。
