@@ -535,31 +535,44 @@ WAL storage must be estimated independently from data storage. In v17, WAL is ma
 
 ### 6-1. SQL Style
 
-- S_001:☆☆☆ Do not use column numbers in ORDER BY clauses.
+- S_SQL001:☆☆☆ Do not use column numbers in ORDER BY clauses.
 `ORDER BY 2, 1` is concise but was flagged for removal in SQL92 and reduces maintainability when columns are added or reordered. Do not use in embedded or persistent code. Allowed in one-off psql console queries.
 
-- S_002:☆☆☆ Do not use column numbers in GROUP BY clauses.
-Same rationale as S_001.
+- S_SQL002:☆☆☆ Do not use column numbers in GROUP BY clauses.
+Same rationale as S_SQL001. Allowed in one-off psql console queries.
 
-- S_003:☆☆ Write SQL keywords in uppercase; write table and column names in lowercase.
+- S_SQL003:☆☆ Write SQL keywords in uppercase; write table and column names in lowercase.
 
-- S_004:☆☆ Place the data value on the left side of comparison operators.
+- S_SQL004:☆☆ Place the data value on the left side of comparison operators.
 
-- S_005:☆☆☆ Always specify column names explicitly in INSERT statements.
+- S_SQL005:☆☆☆ Always specify column names explicitly in INSERT statements.
 Do not rely on column order. Always list target column names to prevent silent failures when the table structure changes.
 
-- S_006:☆☆☆ Window functions are permitted.
+- S_SQL006:☆☆ Window functions are permitted.
 Window functions are approved for OLAP use. They are not prohibited for OLTP use, but separate coding guidelines should be established if used in that context.
 
-- S_007:☆☆☆ Use the JOIN clause for joins.
+- S_SQL007:☆☆☆ Use the JOIN clause for joins.
 Do not join tables in the WHERE clause. Explicitly separating join conditions from filter conditions improves readability. Furthermore, joining in the WHERE clause (e.g., the old Oracle syntax) can lead to accidental Cartesian products (CROSS JOINs) if a single join condition is omitted, causing performance degradation and bugs.
 
-- S_008:☆ Prefer EXISTS over IN for existence checks.
+- S_SQL008:☆ Prefer EXISTS over IN for existence checks.
 While the current PostgreSQL optimizer rewrites IN to EXISTS, making performance differences negligible, IN implies "matches any value in the list" while EXISTS implies "the subquery result exists." Using EXISTS for existence checks improves clarity and readability.
 
-- S_009:☆☆☆ Do not rely on result order.
+- S_SQL009:☆☆☆ Do not rely on result order.
 Tables and query results are unordered sets. Do not write code that depends on the order of rows unless an ORDER BY clause is explicitly specified. Similarly, when using LIMIT or OFFSET, always accompany them with ORDER BY to ensure deterministic results.
 Row ordering may change silently after VACUUM, plan changes, or version upgrades, making order-dependent bugs difficult to reproduce.
+
+### 6-2. Transaction control
+- C_TRX001:☆☆☆ Use READ COMMITTED for transaction isolation level
+As a general rule, use READ COMMITTED, which is the default isolation level for PostgreSQL.
+> **Note**
+> * Do not use REPEATABLE READ. The benefits are few, as it cannot prevent phantom reads relative to the cost of lock occurrence.
+> * SERIALIZABLE has a high probability of forced rollbacks due to serialization failures, which increases development and operational costs, such as retry design. Therefore, do not use it except for processes where strict consistency is required, such as accounting reconciliation. If used, clearly state the reason for adoption in the design documents, etc.
+
+- C_TRX002:☆☆☆ Perform explicit transaction control
+When issuing SQL statements that perform data operations, always explicitly define the transaction boundaries using BEGIN/COMMIT.
+While automatic transaction control occurs within the same session by default, explicit control prevents unintended operations.
+> **Exception**
+> If the adopted application framework, etc., has a convention for transaction control (e.g., Spring's @Transactional annotation), follow the conventions of that framework.
 
 ## 7. Operations Design Standards
 
@@ -662,13 +675,19 @@ This standard's security rules are based on the Zero Trust principle: *"Verify e
 - S_SEC001:☆☆☆ Apply the Principle of Least Privilege.
 Do not grant superuser privileges to application DB users. Grant only the minimum required permissions: SELECT, INSERT, UPDATE, and DELETE on the necessary tables.
 
-- S_SEC002:☆☆☆ Separate developer access from production environments.
+- S_SEC002:☆☆☆ Keep connection information confidential
+Database connection information must be kept confidential using environment variables, etc., and must not be hardcoded in the source code.
+Extracted connection information should not be placed in locations accessible to non-administrators, such as VCS repositories.
+> **Example**
+> * Creating a .env configuration file and making it a target for git commits allows all developers to connect to the production database.
+> **Countermeasures**
+> * .env files should be managed separately by administrators, and .env should be added to .gitignore in the git repository.
+> * Use secret management features when using services like GitHub.
+
+- S_SEC003:☆☆☆ Separate developer access from production environments.
 Direct access to production data must be restricted to DBAs only. When developers require access for investigation, provide a masked copy of the data or issue a time-limited account on request.
 Not currently in scope for this standard's target systems. Define procedures when adapting for production use.
 
-- S_SEC003:☆ Consider Row Level Security (RLS) when needed.
-PostgreSQL's RLS feature allows row-level access control at the database level.
-Not currently used in this standard's target scope. Evaluate when multi-tenant architecture or per-user data isolation is required.
 
 ### 8-2. Data Protection
 
@@ -694,3 +713,8 @@ PII-marked columns must not be accessible to developers with production data. If
 
 - S_SEC007:☆☆☆ Always use prepared statements with bind variables.
 Dynamic query generation is prohibited. Always use placeholders (bind variables) to prevent SQL injection. This rule is shared with the application coding standards.
+
+
+*) Consider Row Level Security (RLS) when needed.
+PostgreSQL's RLS feature allows row-level access control at the database level.
+Not currently used in this standard's target scope. Evaluate when multi-tenant architecture or per-user data isolation is required.

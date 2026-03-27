@@ -1,4 +1,4 @@
-# databaseDesign-standards
+# Database Design Standard
 PostgreSQL向けDB設計・設定標準です
 
 ## 概要
@@ -15,8 +15,8 @@ PostgreSQL向けDB設計・設定標準です
 * 想定規模：中〜大規模
 
 ## 構成
-- [DatabaseDesignStandard.md](DatabaseDesignStandard.md): 日本語版の設計標準
-- [DatabaseDesignStandard_EN.md](DatabaseDesignStandard_EN.md): 英語版の設計標準
+- [Database-Design-Standard.md](database-design-standard.md): 日本語版の設計標準
+- [Database-Design-Standard_EN.md](database-design-standard_EN.md): 英語版の設計標準
 
 ## 利用例（スニペット・テンプレート）
 - [CREATE TABLEテンプレート](Snippet-CreateTable.sql)
@@ -28,7 +28,7 @@ PostgreSQL向けDB設計・設定標準です
 Reference: [つれづれネット散歩](http://kashi.way-nifty.com/jalan/)
 * 本規約は、PostgreSQLのバージョンアップに伴い更新される可能性があります。
 * 旧版（2008年頃）の設計規約は参考資料としてリポジトリに含まれています。
-  - [DatabaseDesignStandard_legacy.md](DatabaseDesignStandard_legacy.md)
+  - [Database-Design-Standard_legacy.md](database-design-standard_legacy.md)
 
 ## AI活用について
 本規約は、複数のAIツール（Claude, ChatGPT, Gemini, DeepL）の支援を受けて開発されました。 
