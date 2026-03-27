@@ -26,8 +26,8 @@ The standards are based on long-term practical experience and a **Data-Oriented 
 
 ## Documents
 
-* Japanese: [DatabaseDesignStandard.md](DatabaseDesignStandard.md)
-* English: [DatabaseDesignStandard_EN.md](DatabaseDesignStandard_EN.md)
+* Japanese: [Database-Design-Standard.md](database-design-standard.md)
+* English: [Database-Design-Standard_EN.md](database-design-standard_EN.md)
 
 ## Quick Start / Templates
 * [CREATE TABLE Snippet](Snippet-CreateTable.sql)
@@ -49,7 +49,7 @@ Each item defines its priority and applicability where relevant.
  Reference: http://kashi.way-nifty.com/jalan/
 * This standard may be updated along with PostgreSQL version upgrades.
 * The legacy version (around 2008) is included as a reference.
-  - [DatabaseDesignStandard_legacy.md](DatabaseDesignStandard_legacy.md)
+  - [DatabaseDesignStandard_legacy.md](database-design-standard_legacy.md)
 
 ## AI-assisted Development
 This standard was developed with the support of multiple AI tools (Claude, ChatGPT, Gemini, DeepL). 
